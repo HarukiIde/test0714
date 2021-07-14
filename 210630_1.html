@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.0/jquery.min.js"></script>
+<link href="https://unpkg.com/tabulator-tables@4.4.3/dist/css/tabulator.min.css" rel="stylesheet">
+<link href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.js"></script>
+<script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.4.3/dist/js/tabulator.min.js"></script>
+
+</head>
+<body onload="show_table()">
+<h1 id=title>システム評価部棚卸表 電子機器 </h1>
+<p>型式:<input type="text" class="SerchTextBox1" >
+No:<input type="text" class="SerchTextBox2" >
+<p>メーカー:<select class="Maker">
+<option value=""></option>
+<option value=""></option>
+<option value=""></option>
+<option value=""></option>
+<option value=""></option>
+<option value=""></option>
+</select>
+管理場所:<select class="LocSelect">
+<option value=""></option>
+<option value="A">A</option>
+<option value="B">B</option>
+<option value="C">C</option>
+<option value="D">D</option>
+<option value="E">E</option>
+<option value="F">F</option>
+<option value="G">G</option>
+</select>
+<form id="DorN">
+	<input name="DNPC" type="radio" value="D"> デスクトップPC
+	<input name="DNPC" type="radio" value="N"> ノートPC
+</form>
+<input type="button" class="SearchButton1"value="検索" id="Search">
+<input type="button" class="ClearButton1"value="クリア" id="Clear"></p>
+<div id="table"></div>
+
+<script type="text/javascript">
+
+var table = "";
+//名称確認
+var element = document.getElementById( "DorN" ) ;
+var radioList = element.DNPC ;
+
+
+$(function(){
+	show_table()
+});
+
+function updateFilter(){
+	var modelfilter = $(".SerchTextBox1").val();
+	var Nofilter = $(".SerchTextBox2").val();
+	var locselect = $(".LocSelect").val();
+	var DNname = $(".radioList").val();
+	table.setFilter([
+		{field:"Model", type:"like", value:modelfilter},
+		{field:"No", type:"like", value:Nofilter},
+		{field:"MngLoc", type:"like", value:locselect},
+		
+	]);
+};
+
+$(".SearchButton1").click(function(){
+	var SerchTex1 = $(".SerchTextBox1").val();
+	var SerchTex2 = $(".SerchTextBox2").val();
+	var SerchTex3 = $(".SerchTextBox3").val();
+	var SerchTex4 = $(".LocSelect").val();
+	
+	if(SerchTex1 == "" && SerchTex2 == "" && SerchTex3 == "" 
+		&& SerchTex4 == "" && SerchTex5 == ""){
+	table.clearFilter();
+	}else{
+	updateFilter()
+	}
+});
+
+$(".ClearButton1").click(function(){
+	table.clearFilter();
+	$(".SerchTextBox1").val("");
+	$(".SerchTextBox2").val("");
+	$(".SerchTextBox3").val("");
+	$(".LocSelect").val("");
+});
+
+var makerNum=function(cell){
+	var val = cell.getValue();
+	if(val==="1"){
+		return "TOSHIBA";
+	}else if (val==="2"){
+		return "SONY";
+	}else if (val==="3"){
+		return "HP";
+	}else if (val==="4"){
+		return "DELL";
+	}else if (val==="5"){
+		return "NEC";
+	}else{
+		return "その他";
+	}
+};
+
+var nameicon=function(cell){
+	var nameID = cell.getValue();
+	if(nameID==="N"){
+		return `<i class="fas fa-laptop"></i>`
+	}else if (nameID==="D"){
+		return`<i class="fas fa-desktop"></i>`
+	}else {
+		return ""
+	}
+};
+
+
+
+var show_table=function(){
+    var tdata = [
+        {check:false,No:"1",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"01",name:"N",maker:"1",Model:"dynabook",
+        	SN:"38095815H",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"2020-4-1",Mnger:"",Remarks:"HDD破壊 写真撮影　資産No.K170222504再"},
+    	{check:false,No:"2",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"02",name:"N",maker:"2",Model:"VAIO",
+        	SN:"C3LPZNWG",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"2020-4-1",Mnger:"",Remarks:"HDD破壊 写真撮影　資産No.K130222504再"},
+        {check:false,No:"3",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"03",name:"N",maker:"3",Model:"ALTEC LANSING",
+        	SN:"CNF728487",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"2020-4-1",Mnger:"",Remarks:"HDD破壊 写真撮影　資産No.K130222504再"},
+		{check:true,No:"4",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"04",name:"D",maker:"4",Model:"VOSTRO",
+        	SN:"DQKQJY1",MngLoc:"G",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"資産No.T110708121 モニター、キーボード一式として管理"},
+		{check:false,No:"5",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"05",name:"N",maker:"3",Model:"ProBook450G2",
+        	SN:"JPA539XSM8",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"資産No.K160118462M"},
+		{check:true,No:"6",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"06",name:"N",maker:"4",Model:"VOSTRO 3560",
+        	SN:"GLV728487N",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"資産No.K130903376M"},
+		{check:false,No:"7",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"07",name:"N",maker:"3",Model:"ProBook450 G2",
+        	SN:"JPA539XSM8",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"資産No.K151225456M"},
+		{check:true,No:"8",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"08",name:"D",maker:"5",Model:"PC-MJ32KEZCB",
+        	SN:"11000511A",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"資産No.不明"},
+		{check:false,No:"9",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"09",name:"N",maker:"5",Model:"VersaPro VJ16M/FD34",
+        	SN:"CNU6490YK3",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"CAN CARD(SYS-MET-T-002-07)付属　資産No.T08031247"},
+		{check:false,No:"10",DAI:"SYS-ALL",TYU:"E",SYO:"001",BrchNum:"10",name:"N",maker:"3",Model:"nx6320",
+        	SN:"CNF6030N4B",MngLoc:"E",PrcDate:"2017-6-19",Disposal:"",Mnger:"",Remarks:"CAN CARD(SYS-MET-T-002-10)付属　資産No.T06122520"},
+    ];
+    table = new Tabulator("#table", {
+        
+        rowFormatter:function(row){
+        	var Rowdata=row.getData()
+        	if(Rowdata.Disposal===""){
+        		
+        	}else{
+        		row.getElement().style.backgroundColor = "gray";
+        	}
+        },
+        
+        data:tdata,
+        columns: [
+            {title:"チェック",field:"check",frozen: true,formatter:"tickCross",editor:true},
+            {title:"No",field:"No"},
+            {title:"大",field:"DAI"},
+            {title:"中",field:"TYU"},
+            {title:"小",field:"SYO"},
+            {title:"枝番",field:"BrchNum"},
+            {title:"名称",field:"name",formatter:nameicon,bottomCalcFormatter:nameicon},
+            {title:"メーカー",field:"maker",formatter:makerNum,bottomCalcFormatter:makerNum},
+            {title:"型式",field:"Model"},
+            {title:"S/N",field:"SN"},
+            {title:"管理場所",field:"MngLoc"},
+            {title:"購入日",field:"PrcDate",formatter:"datetime",
+            	formatterParams:{
+            	    outputFormat:"YY/M/D"
+            	}
+            },
+            {title:"廃棄日",field:"Disposal",formatter:"datetime",
+            	formatterParams:{
+            	    outputFormat:"YY/M/D"
+            	}
+            },
+            {title:"管理者",field:"Mnger"},
+            {title:"備考",field:"Remarks"},
+        ],
+    });
+}
+</script>
